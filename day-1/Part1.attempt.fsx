@@ -1,10 +1,12 @@
 // 1. GETTING SOME DATA
 open System
 open System.IO
-open System.Linq
-open System.Collections.Generic
+open System.Diagnostics
 
 type LabelPixel = { Label:int; Pixels:int[] }
+type Distance = { Label: int; Distance: float }
+type Result = { Actual: int; Predicted: int }
+
 let fileAsRecords (fileName: string) =
     let localPath = __SOURCE_DIRECTORY__
     let dataPath = Path.Combine(localPath,"digits")
@@ -20,20 +22,20 @@ let fileAsRecords (fileName: string) =
     ints |> Array.map(fun x -> { Label = x.[0]; Pixels = x.[1..]})
 
 // 6. COMPUTING DISTANCES
-let distance1 (P1: int[]) (P2: int[]) =
-    Array.map2 (fun p1 p2 -> (p1-p2)*(p1-p2)) P1 P2
+let squareDistance (P1: int[]) (P2: int[]) =
+    (P1, P2)
+    ||> Array.map2 (fun p1 p2 -> (p1-p2)*(p1-p2)) 
     |> Array.sum
     |> float
     |> Math.Sqrt
 
-let distance2 (P1: int[]) (P2: int[]) =
-    Array.map2 (fun p1 p2 -> Math.Abs((int)p1-p2)) P1 P2
+let absDistance (P1: int[]) (P2: int[]) =
+    (P1, P2)
+    ||> Array.map2 (fun p1 p2 -> Math.Abs((int)p1-p2))
     |> Array.sum
     |> float
 
 // 7. WRITING THE CLASSIFIER FUNCTION
-type Distance = { Label: int; Distance: float }
-
 let mode (l:int[]) =
     let x = 
         l
@@ -47,10 +49,10 @@ let mode (l:int[]) =
         |> snd                                          // From (count, list) we just want the second item (the list)
     x.[0]
 
-let knnclassify (k:int) (trainedRecords: LabelPixel[]) (unknown:int[]) =
+let knnclassify (distanceFn: int[] -> int[] -> float) (k:int) (trainedRecords: LabelPixel[]) (unknown:int[]) =
     let sorted = 
         trainedRecords 
-        |> Array.map(fun r -> { Label = r.Label; Distance = distance2 r.Pixels unknown })
+        |> Array.map(fun r -> { Label = r.Label; Distance = distanceFn r.Pixels unknown })
         |> Array.sortBy(fun x-> x.Distance)
     let top = 
         sorted.[0..k-1]
@@ -58,17 +60,27 @@ let knnclassify (k:int) (trainedRecords: LabelPixel[]) (unknown:int[]) =
     mode top
 
 // 8. EVALUATING THE MODEL AGAINST VALIDATION DATA
-let classifier = 
+let execute (filename: string) (classifier: int[] -> int) =
+    fileAsRecords filename
+    |> Array.averageBy(fun x -> if x.Label = classifier (x.Pixels) then 1.0 else 0.0)
+
+let executeWitValidationSample = 
+    execute "validationsample.csv" 
+
+let resultsquarek1 = 
     fileAsRecords "trainingsample.csv"
-    |> knnclassify 3
-
-type Result = { Actual: int; Predicted: int }
-
-let validationRecords = 
-    fileAsRecords "validationsample.csv"
-    |> Array.map(fun x -> { Actual = x.Label; Predicted = classifier x.Pixels })
-let passes = 
-    validationRecords
-    |> Array.filter(fun x -> x.Actual = x.Predicted)
-let percentage =
-    (float)passes.Length / (float)validationRecords.Length
+    |> knnclassify squareDistance 1
+    |> executeWitValidationSample 
+let resultsquarek3 = 
+    fileAsRecords "trainingsample.csv"
+    |> knnclassify squareDistance 3
+    |> executeWitValidationSample 
+    
+let resultabsk1 = 
+    fileAsRecords "trainingsample.csv"
+    |> knnclassify absDistance 1
+    |> executeWitValidationSample 
+let resultabsk3 = 
+    fileAsRecords "trainingsample.csv"
+    |> knnclassify absDistance 3
+    |> executeWitValidationSample 
