@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "wines", "wines.fsproj", "{5736C5EE-E95F-4C2C-939D-4EB077CC45C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workshop", "workshop", "{4796177C-ECA8-4399-93BA-CA584CAE9D31}"
+	ProjectSection(SolutionItems) = preProject
+		workshop\0-exploration.fsx = workshop\0-exploration.fsx
+		workshop\1-stumps.fsx = workshop\1-stumps.fsx
+		workshop\2-model.fsx = workshop\2-model.fsx
+		workshop\3-trees-bonus.fsx = workshop\3-trees-bonus.fsx
+		workshop\3-trees.fsx = workshop\3-trees.fsx
+		workshop\4-forests.fsx = workshop\4-forests.fsx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solved", "solved", "{E75617CC-27D4-4070-9072-AD9CF57976ED}"
+	ProjectSection(SolutionItems) = preProject
+		solved\0-exploration.fsx = solved\0-exploration.fsx
+		solved\1-stumps.fsx = solved\1-stumps.fsx
+		solved\2-model.fsx = solved\2-model.fsx
+		solved\3-trees.fsx = solved\3-trees.fsx
+		solved\4-forests.fsx = solved\4-forests.fsx
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5736C5EE-E95F-4C2C-939D-4EB077CC45C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5736C5EE-E95F-4C2C-939D-4EB077CC45C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5736C5EE-E95F-4C2C-939D-4EB077CC45C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5736C5EE-E95F-4C2C-939D-4EB077CC45C6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
